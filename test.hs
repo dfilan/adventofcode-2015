@@ -1,2 +1,2 @@
-hi :: Int -> Int
-hi = 8
+hi     :: Int -> Int
+hi num = 8
