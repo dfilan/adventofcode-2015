@@ -3,8 +3,7 @@ import Data.List
 import System.IO
 
 isVowel :: Char -> Bool
-isVowel char = (char == 'a') || (char == 'e') || (char == 'i')
-               || (char == 'o') || (char == 'u')
+isVowel char = elem char "aeiou"
 
 isVowely :: String -> Bool
 isVowely str = length (filter isVowel str) > 2
@@ -17,6 +16,9 @@ isNaughty str = or $ map (flip isInfixOf str) ["ab", "cd", "pq", "xy"]
 
 isNice :: String -> Bool
 isNice str = isVowely str && isDoubly str && (not $ isNaughty str)
+
+-- isExtraDoubly :: String -> Bool
+-- isExtraDoubly str = 
 
 numNice :: String -> Int
 numNice = length . filter isNice . lines
