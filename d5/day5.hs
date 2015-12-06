@@ -12,7 +12,7 @@ isDoubly :: String -> Bool
 isDoubly str = length (filter (\x -> length x > 1) $ group str) > 0
 
 isNaughty :: String -> Bool
-isNaughty str = or $ map (flip isInfixOf str) ["ab", "cd", "pq", "xy"]
+isNaughty str = or $ map (`isInfixOf` str) ["ab", "cd", "pq", "xy"]
 
 isNice :: String -> Bool
 isNice str = isVowely str && isDoubly str && (not $ isNaughty str)
