@@ -15,7 +15,7 @@ isNaughty :: String -> Bool
 isNaughty str = or $ map (`isInfixOf` str) ["ab", "cd", "pq", "xy"]
 
 isNice :: String -> Bool
-isNice str = isVowely str && isDoubly str && (not $ isNaughty str)
+isNice = and . (<*>) [isVowely, isDoubly, not . isNaughty] . pure
 
 -- isExtraDoubly :: String -> Bool
 -- isExtraDoubly str = 
