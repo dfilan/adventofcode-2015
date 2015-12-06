@@ -1,6 +1,7 @@
 import Data.Complex
 import Data.List
 import System.IO
+import Control.Applicative
 
 charToComplex :: (RealFloat a) => Char -> Complex a
 charToComplex char = case char of
@@ -12,21 +13,31 @@ charToComplex char = case char of
 
 numsVisited :: (RealFloat a) => String -> [Complex a]
 numsVisited = map (sum . map charToComplex) . inits
-
--- slow, but it gets there
-uniques :: (Eq a) => [a] -> [a]
-uniques [] = []
-uniques (x:xs)
- | elem x xs = uniques xs
- | otherwise = x : uniques xs
        
 diffNumsVisited :: String -> Int
-diffNumsVisited = length . uniques . numsVisited
+diffNumsVisited = length . nub . numsVisited
+
+odds :: [a] -> [a]
+odds list = [list!!n | n <- [1,3..(length list)]]
+
+evens :: [a] -> [a]
+evens list = [list!!n | n <- [0,2..(length list) - 1]]
+
+santaVisits :: (RealFloat a) => String -> [Complex a]
+santaVisits = nub . numsVisited . evens
+
+roboVisits :: (RealFloat a) => String -> [Complex a]
+roboVisits = nub . numsVisited . odds
+
+totalVisits :: String -> Int
+totalVisits =  length . (union <$> santaVisits <*> roboVisits)
 
 main = do
     withFile "grid_movements.txt" ReadMode (\handle -> do
       contents <- hGetContents handle
       let houses_visited = diffNumsVisited contents
       putStrLn "part 1:"
-      print houses_visited)
-
+      print houses_visited
+      let robo_visited = totalVisits contents
+      putStrLn "part 2:"
+      print robo_visited)
