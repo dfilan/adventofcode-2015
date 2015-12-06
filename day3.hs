@@ -13,13 +13,13 @@ charToComplex char = case char of
 numsVisited :: (RealFloat a) => String -> [Complex a]
 numsVisited = map (sum . map charToComplex) . inits
 
--- super inefficient!
+-- slow, but it gets there
 uniques :: (Eq a) => [a] -> [a]
 uniques [] = []
 uniques (x:xs)
- | elem x $ uniques xs = uniques xs
- | otherwise           = x : uniques xs
-
+ | elem x xs = uniques xs
+ | otherwise = x : uniques xs
+       
 diffNumsVisited :: String -> Int
 diffNumsVisited = length . uniques . numsVisited
 
@@ -29,3 +29,4 @@ main = do
       let houses_visited = diffNumsVisited contents
       putStrLn "part 1:"
       print houses_visited)
+
