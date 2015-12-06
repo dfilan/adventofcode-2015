@@ -8,7 +8,7 @@ md5 = hash
 zeroy :: BS.ByteString -> Bool
 zeroy str
  | BS.length str < 5 = False
- | otherwise         = BS.take 5 str == BS.pack "00000"
+ | otherwise         = BS.take 6 str == BS.pack "000000"
 
 -- only use for positive integers
 revNumToStr :: Int -> String
@@ -23,7 +23,7 @@ hashStrNum :: String -> Int -> Digest MD5
 hashStrNum str n = md5 $ BS.pack $ str ++ numToStr n
 
 leastZeroy :: String -> Int
-leastZeroy str = head $ filter (zeroy . BS.take 5 . digestToHexByteString
+leastZeroy str = head $ filter (zeroy . digestToHexByteString
                                 . hashStrNum str) [0..] 
 
 main = do
