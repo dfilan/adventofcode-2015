@@ -1,0 +1,28 @@
+import Data.Char
+import Data.List
+import System.IO
+
+isVowel :: Char -> Bool
+isVowel char = (char == 'a') || (char == 'e') || (char == 'i')
+               || (char == 'o') || (char == 'u')
+
+isVowely :: String -> Bool
+isVowely str = length (filter isVowel str) > 2
+
+isDoubly :: String -> Bool
+isDoubly str = length (filter (\x -> length x > 1) $ group str) > 0
+
+isNaughty :: String -> Bool
+isNaughty str = or $ map (flip isInfixOf str) ["ab", "cd", "pq", "xy"]
+
+isNice :: String -> Bool
+isNice str = isVowely str && isDoubly str && (not $ isNaughty str)
+
+numNice :: String -> Int
+numNice = length . filter isNice . lines
+
+main = do
+  withFile "strings.txt" ReadMode (\handle -> do
+    strings <- hGetContents handle
+    let numnice = numNice strings
+    print numnice)
