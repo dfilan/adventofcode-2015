@@ -1,19 +1,20 @@
+-- see commit b632f5c for version that worked for part 1
 import Data.Char
 import Data.List
 import System.IO
 
-type Light = (Int, Int, Bool)
+type Light = (Int, Int, Int)
 type Pos = (Int, Int)
 type Grid = [Light]
 
 turnOn :: Light -> Light
-turnOn (a,b,c) = (a,b,True)
+turnOn (a,b,c) = (a,b,c + 1)
 
 turnOff :: Light -> Light
-turnOff (a,b,c) = (a,b,False)
+turnOff (a,b,c) = (a,b,min 0 (c-1))
 
 toggle :: Light -> Light
-toggle (a,b,c) = (a,b,not c)
+toggle (a,b,c) = (a,b,c + 2)
 
 fstl :: Light -> Int
 fstl (a,_,_) = a
@@ -72,14 +73,16 @@ instrToGridFunc :: String -> (Grid -> Grid)
 instrToGridFunc = listApply . map stringToGridFunc . lines 
 
 myGrid :: Grid
-myGrid = [(a,b,False) | a <- [0..999], b <- [0..999]]
+myGrid = [(a,b,0) | a <- [0..999], b <- [0..999]]
 
-numOnAtEnd :: String -> Grid -> Int
-numOnAtEnd str = length . filter (\(a,b,bool) -> bool) . instrToGridFunc str
+-- numOnAtEnd :: String -> Grid -> Int
+-- numOnAtEnd str = length . filter (\(a,b,bool) -> bool) . instrToGridFunc str
+
+totalBrightnessAtEnd :: String -> Grid -> Int
+totalBrightnessAtEnd str = sum . map (\(a,b,c) -> c) . instrToGridFunc str
 
 main = do
   withFile "instructions.txt" ReadMode (\handle -> do
     instr <- hGetContents handle
-    putStrLn "part 1"
-    let numon = numOnAtEnd instr myGrid
-    print numon)
+    let tb = totalBrightnessAtEnd instr myGrid
+    print tb)
