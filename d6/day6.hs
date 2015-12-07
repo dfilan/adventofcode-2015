@@ -77,9 +77,6 @@ myGrid = [(a,b,False) | a <- [0..999], b <- [0..999]]
 numOnAtEnd :: String -> Grid -> Int
 numOnAtEnd str = length . filter (\(a,b,bool) -> bool) . instrToGridFunc str
 
--- numLightsOn :: Grid -> Int
--- numLightsOn = length . filter (\(a,b,bool) -> bool)
-
 main = do
   withFile "instructions.txt" ReadMode (\handle -> do
     instr <- hGetContents handle
