@@ -40,7 +40,7 @@ stringToInt = sum . zipWith (*) [10^n | n <- [0..]]
                 . reverse . map digitToInt
 
 sameTest :: (Char -> Bool) -> Char -> Char -> Bool
-sameTest test a b = (and $ map test [a,b]) || (not $ or $ map test [a,b])
+sameTest test a b = (test a && test b) || not (test a || test b)
 
 stringToPos :: String -> Pos
 stringToPos str = (stringToInt (list!!0), stringToInt (list!!2))
@@ -82,5 +82,4 @@ main = do
     instr <- hGetContents handle
     putStrLn "part 1"
     let numon = numOnAtEnd instr myGrid
-    print numon
-    )
+    print numon)
