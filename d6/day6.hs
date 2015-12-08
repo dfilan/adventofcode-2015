@@ -1,6 +1,7 @@
 -- see commit b632f5c for version that worked for part 1
 import Data.Char
 import Data.List
+import Data.Function
 import System.IO
 
 type Light = (Int, Int, Int)
@@ -36,16 +37,9 @@ funcInRange func tup1 tup2 light
 funcGridRange :: (Light -> Light) -> [Pos] -> Grid -> Grid
 funcGridRange func list = map (funcInRange func (list!!0) (list!!1))
 
-stringToInt :: String -> Int
-stringToInt = sum . zipWith (*) [10^n | n <- [0..]]
-                . reverse . map digitToInt
-
-sameTest :: (Char -> Bool) -> Char -> Char -> Bool
-sameTest test a b = (test a && test b) || not (test a || test b)
-
 stringToPos :: String -> Pos
-stringToPos str = (stringToInt (list!!0), stringToInt (list!!2))
-    where list = groupBy (sameTest isDigit) str
+stringToPos str = (read (list!!0), read (list!!2))
+    where list = groupBy (on (==) isDigit) str
 
 isDigitOrCom :: Char -> Bool
 isDigitOrCom = (`elem` "1234567890,")
@@ -55,7 +49,7 @@ hasDigitOrCom = or . map isDigitOrCom
 
 stringToListPos :: String -> [Pos]
 stringToListPos = map stringToPos . filter hasDigitOrCom
-                       . groupBy (sameTest isDigitOrCom)
+                       . groupBy (on (==) isDigitOrCom)
 
 stringToGridFunc :: String -> Grid -> Grid
 stringToGridFunc str
@@ -65,12 +59,13 @@ stringToGridFunc str
  | otherwise                 = id
  where pos = stringToListPos str
 
-listApply :: [a -> a] -> a -> a
-listApply []     = id
-listApply (f:fs) =  listApply fs . f
-
 instrToGridFunc :: String -> (Grid -> Grid)
-instrToGridFunc = listApply . map stringToGridFunc . lines 
+instrToGridFunc str grid = foldl' (\a f -> seq (eval $ f a) (f a)) grid
+                             $ map stringToGridFunc $ lines str
+
+eval :: Grid -> ()
+eval []           = ()
+eval ((a,b,c):xs) = a `seq` b `seq` c `seq` eval xs
 
 myGrid :: Grid
 myGrid = [(a,b,0) | a <- [0..999], b <- [0..999]]
