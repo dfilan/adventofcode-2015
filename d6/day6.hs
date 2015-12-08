@@ -12,7 +12,7 @@ turnOn :: Light -> Light
 turnOn (a,b,c) = (a,b,c + 1)
 
 turnOff :: Light -> Light
-turnOff (a,b,c) = (a,b,min 0 (c-1))
+turnOff (a,b,c) = (a,b,max 0 (c-1))
 
 toggle :: Light -> Light
 toggle (a,b,c) = (a,b,c + 2)
