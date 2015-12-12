@@ -7,10 +7,10 @@ type Wire    = (String, Signal)
 type Circuit = [Wire]
 
 lshift :: Signal -> Int -> Signal
-lshift sig int = (drop int sig) ++ (take int sig)
+lshift sig int = (drop int sig) ++ (take int $ repeat False)
 
 rshift :: Signal -> Int -> Signal
-rshift sig int = (drop negint sig) ++ (take negint sig)
+rshift sig int = (take int $ repeat False) ++ (take negint sig)
     where negint = (length sig) - int
 
 intToSig :: Int -> Signal
@@ -75,12 +75,12 @@ flipList []     = []
 flipList (x:xs) = xs ++ [x]
 
 main = do
-  withFile "easy_circuit_instructions.txt" ReadMode (\handle -> do
+  withFile "circuit_instructions.txt" ReadMode (\handle -> do
     instr <- hGetContents handle
-    let sortedInstr =  mySort $ lines instr
+    let sortedInstr = flipList $ mySort $ lines instr
     -- print sortedInstr
     let endCirc = instrToCircFunc sortedInstr []
-        siga = nameToSig "g" endCirc
+        siga = nameToSig "a" endCirc
         intsiga = sigToInt siga
     print intsiga
     -- print endCirc
