@@ -78,8 +78,7 @@ main = do
   withFile "circuit_instructions.txt" ReadMode (\handle -> do
     instr <- hGetContents handle
     let sortedInstr = flipList $ mySort $ lines instr
-    -- print sortedInstr
-    let endCirc = instrToCircFunc sortedInstr []
+        endCirc = instrToCircFunc sortedInstr []
         siga = nameToSig "a" endCirc
         intsiga = sigToInt siga
     print intsiga
