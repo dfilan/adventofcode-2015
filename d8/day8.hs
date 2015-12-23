@@ -41,10 +41,14 @@ extraChars :: String -> Int
 extraChars str = 2 + 3 * numHex ins + numQuote ins + numSlash ins
     where ins = innards str
 
+addChars :: String -> Int
+addChars str = 4 + numHex ins + 2 * numQuote ins + 2 * numSlash ins
+    where ins = innards str
+
 main = do
   withFile "code.txt" ReadMode (\handle -> do
     code <- hGetContents handle
     let lnc = lines code
-    print $ sum $ map extraChars $ lnc
+    print $ sum $ map addChars $ lnc
     -- print $ extraChars $ lnc!!41
     )
